@@ -5,14 +5,14 @@ export const config = {
     "database": "testdb",
     "host": "localhost",
     "dialect": "postgres",
-    "aws_region": "us-east-2",
+    "aws_region": "us-west-1",
     "aws_profile": "default",
-    "aws_media_bucket": "udagram-ruttner-dev"
+    "aws_media_bucket": "my-bucket"
   },
   "prod": {
     "username": "",
     "password": "",
-    "database": "udagram_prod",
+    "database": "testdb",
     "host": "",
     "dialect": "postgres"
   }
