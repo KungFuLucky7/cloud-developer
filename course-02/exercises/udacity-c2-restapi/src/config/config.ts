@@ -1,9 +1,9 @@
 export const config = {
   "dev": {
-    "username": "",
-    "password": "",
-    "database": "",
-    "host": "",
+    "username": "root",
+    "password": "1234",
+    "database": "testdb",
+    "host": "localhost",
     "dialect": "postgres",
     "aws_region": "us-east-2",
     "aws_profile": "default",
