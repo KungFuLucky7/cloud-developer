@@ -1,18 +1,18 @@
 export const config = {
   "dev": {
-    "username": "root",
-    "password": "1234",
-    "database": "testdb",
-    "host": "localhost",
+    "username": process.env.POSTGRES_USERNAME,
+    "password": process.env.POSTGRES_PASSWORD,
+    "database": process.env.POSTGRES_DATABASE,
+    "host": process.env.AWS_DATABASE_HOST,
     "dialect": "postgres",
     "aws_region": "us-west-1",
     "aws_profile": "default",
-    "aws_media_bucket": "my-bucket"
+    "aws_media_bucket": process.env.AWS_S3_BUCKET
   },
   "prod": {
     "username": "",
     "password": "",
-    "database": "testdb",
+    "database": "",
     "host": "",
     "dialect": "postgres"
   }
