@@ -1,6 +1,6 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import {filterImageFromURL, deleteLocalFiles} from './util/util';
+import bodyParser from "body-parser";
+import express, { NextFunction, Request, Response } from "express";
+import { deleteLocalFiles, filterImageFromURL } from "./util/util";
 
 (async () => {
 
@@ -26,22 +26,25 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   //    image_url: URL of a publicly accessible image
   // RETURNS
   //   the filtered image file [!!TIP res.sendFile(filteredpath); might be useful]
-  app.get( "/filteredimage", async ( req, res, next ) => {
+  app.get( "/filteredimage", async (
+    req: Request, res: Response, next: NextFunction,
+  ) => {
     // Access the provided "image_url" query parameter
     const imageUrl = req.query.image_url;
 
     // check Filename is valid
     if (!imageUrl) {
-        return res.status(400).send({
+        return res.status(422).send({
           message: "image_url query parameter is required!",
         });
     }
 
     const filteredpath = await filterImageFromURL(imageUrl);
 
-    res.sendFile(filteredpath,  (err) => {
+    res.status(200).sendFile(filteredpath, (err: Error) => {
       if (err) {
         next(err);
+        res.status(500).send("Internal Server Error");
       } else {
         try {
           console.debug("Deleting this file locally " +
@@ -59,7 +62,7 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   // ! END @TODO1
   // Root Endpoint
   // Displays a simple message to the user
-  app.get( "/", async ( req, res ) => {
+  app.get( "/", async ( req: Request, res: Response ) => {
     res.send("try GET /filteredimage?image_url={{}}");
   });
 
