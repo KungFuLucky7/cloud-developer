@@ -1,3 +1,5 @@
+import * as uuid from 'uuid'
+
 import { CreateTodoRequest } from "../requests/CreateTodoRequest";
 import { TodoItem } from "../models/TodoItem";
 import { TodoCrud } from "../dataLayer/todoCrud";
