@@ -3,8 +3,6 @@ service:
 
 plugins:
   - serverless-webpack
-  - serverless-reqvalidator-plugin
-  - serverless-aws-documentation
   - serverless-iam-roles-per-function
 
 # Uncomment to enable individual packaging
@@ -23,27 +21,12 @@ provider:
     TODOITEM_TABLE_GSI: byUserIdGsi
     TODOITEM_S3_BUCKET_NAME: todoitem-pec-attachments-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
-    AUTH_0_SECRET_ID: Auth0Secret-${self:provider.stage}
-    AUTH_0_SECRET_FIELD: auth0Secret
+    AUTH_0_SECRET_ID: UdagramSecret-${self:provider.stage}
+    AUTH_0_SECRET_FIELD: Auth0ClientSecret
 
   tracing:
     lambda: true
     apiGateway: true
-
-custom:
-  documentation:
-    api:
-      info:
-        version: v1.0.0
-        title: Udagram Serverless Final Project API
-        description: Serverless application for TODO list
-    models:
-      - name: CreateTodoRequest
-        contentType: application/json
-        schema: ${file(src/models/create-todo-request.json)}
-      - name: UpdateTodoRequest
-        contentType: application/json
-        schema: ${file(src/models/update-todo-request.json)}
 
 functions:
 
@@ -91,13 +74,10 @@ functions:
       - http:
           method: post
           path: todos
+          request:
+            schemas:
+              application/json: ${file(src/models/create-todo-request.json)}
           authorizer: Auth
-          reqValidatorName: RequestBodyValidator
-          documentation:
-            summary: Create a new TODO
-            description: Create a new TODO
-            requestModels:
-              'application/json': CreateTodoRequest
           cors: true
 
     iamRoleStatements:
@@ -132,6 +112,12 @@ functions:
       - http:
           method: patch
           path: todos/{todoId}
+          request:
+            parameters:
+              paths:
+                todoId: true
+            schemas:
+              application/json: ${file(src/models/update-todo-request.json)}
           authorizer: Auth
           reqValidatorName: RequestBodyValidator
           documentation:
@@ -173,6 +159,10 @@ functions:
       - http:
           method: delete
           path: todos/{todoId}
+          request:
+            parameters:
+              paths:
+                todoId: true
           authorizer: Auth
           cors: true
 
@@ -208,6 +198,10 @@ functions:
       - http:
           method: post
           path: todos/{todoId}/attachment
+          request:
+            parameters:
+              paths:
+                todoId: true
           authorizer: Auth
           cors: true
 
