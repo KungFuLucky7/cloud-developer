@@ -16,7 +16,7 @@
       "description": "Date and time by which an item should be completed",
       "minLength": 1,
       "maxLength": 32,
-      "pattern": "^\\d{4}-\\d{2}-\\d{2}(T|\\s)\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,6})?(Z|(\\+|-)\\d{2}(:?\\d{2})?)?$"
+      "pattern": "\\S+"
     },
     "done": {
       "type": "boolean",
