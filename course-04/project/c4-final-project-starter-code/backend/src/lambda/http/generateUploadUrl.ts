@@ -31,7 +31,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     Key: attachmentId,
     Expires: Number(urlExpiration)
   });
-  await updateTodoItemAttachmentUrl(todoId, userId, uploadUrl);
+  await updateTodoItemAttachmentUrl(todoId, userId, attachmentId);
 
   return {
     statusCode: 202,

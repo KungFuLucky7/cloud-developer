@@ -71,7 +71,7 @@ export class TodoCrud {
         }).promise();
     }
 
-    async updateTodoAttachmentUrl(todoId: string, userId: string, attachmentUrl: string) {
+    async updateTodoAttachmentUrl(todoId: string, userId: string, attachmentId: string) {
         await this.docClient.update({
             TableName: this.todoTable,
             Key: {
@@ -80,7 +80,7 @@ export class TodoCrud {
             },
             UpdateExpression: "set attachmentUrl = :attachmentUrl",
             ExpressionAttributeValues: {
-                ":attachmentUrl": `https://${bucketName}.s3.amazonaws.com/${attachmentUrl}`
+                ":attachmentUrl": `https://${bucketName}.s3.amazonaws.com/${attachmentId}`
             }
         }).promise();
     }

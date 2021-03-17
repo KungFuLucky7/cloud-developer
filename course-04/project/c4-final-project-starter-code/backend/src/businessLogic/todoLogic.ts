@@ -51,7 +51,10 @@ export async function updateTodoItem (todoId: string, userId: string, updatedTod
     });
 }
 
-export async function updateTodoItemAttachmentUrl (todoId: string, userId: string, attachmentUrl: string) {
-    logger.info(`Updating todoId ${todoId} with attachmentUrl ${attachmentUrl}`);
-    await todoCrud.updateTodoAttachmentUrl(todoId, userId, attachmentUrl);
+export async function updateTodoItemAttachmentUrl (todoId: string, userId: string, attachmentId: string) {
+    logger.info("Updating TODO AttachmentUrl:", {
+        todoId: todoId,
+        attachmentId: attachmentId
+    });
+    await todoCrud.updateTodoAttachmentUrl(todoId, userId, attachmentId);
 }
