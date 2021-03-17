@@ -26,6 +26,13 @@ provider:
     AUTH_0_SECRET_ID: UdagramSecret-${self:provider.stage}
     AUTH_0_SECRET_FIELD: Auth0ClientSecret
 
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - secretsmanager:GetSecretValue
+      Resource:
+        - arn:aws:secretsmanager:us-east-1:485673885023:secret:UdagramSecret-dev-D1lD8d
+
   tracing:
     lambda: true
     apiGateway: true
@@ -46,10 +53,6 @@ functions:
           cors: true
 
     iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - secretsmanager:GetSecretValue
-        Resource: !Ref Auth0Secret
       - Effect: Allow
         Action:
           - dynamodb:Query
@@ -83,10 +86,6 @@ functions:
           cors: true
 
     iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - secretsmanager:GetSecretValue
-        Resource: !Ref Auth0Secret
       - Effect: Allow
         Action:
           - dynamodb:putItem
@@ -132,10 +131,6 @@ functions:
     iamRoleStatements:
       - Effect: Allow
         Action:
-          - secretsmanager:GetSecretValue
-        Resource: !Ref Auth0Secret
-      - Effect: Allow
-        Action:
           - dynamodb:updateItem
         Resource:
           - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOITEM_TABLE}
@@ -171,10 +166,6 @@ functions:
     iamRoleStatements:
       - Effect: Allow
         Action:
-          - secretsmanager:GetSecretValue
-        Resource: !Ref Auth0Secret
-      - Effect: Allow
-        Action:
           - dynamodb:deleteItem
         Resource:
           - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOITEM_TABLE}
@@ -208,10 +199,6 @@ functions:
           cors: true
 
     iamRoleStatements:
-      - Effect: Allow
-        Action:
-          - secretsmanager:GetSecretValue
-        Resource: !Ref Auth0Secret
       - Effect: Allow
         Action:
           - s3:PutObject
