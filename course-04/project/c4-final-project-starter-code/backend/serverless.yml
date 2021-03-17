@@ -1,3 +1,5 @@
+app: serverless-todo-app
+org: kungfulucky7
 service:
   name: serverless-todo-app
 
