@@ -27,13 +27,6 @@ provider:
     AUTH_0_SECRET_ID: UdagramSecret-${self:provider.stage}
     AUTH_0_SECRET_FIELD: Auth0ClientSecret
 
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - secretsmanager:GetSecretValue
-      Resource:
-        - arn:aws:secretsmanager:us-east-1:485673885023:secret:UdagramSecret-dev-D1lD8d
-
   tracing:
     lambda: true
     apiGateway: true
@@ -42,6 +35,12 @@ functions:
 
   Auth:
     handler: src/lambda/auth/auth0Authorizer.handler
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - secretsmanager:GetSecretValue
+        Resource:
+          - arn:aws:secretsmanager:us-east-1:485673885023:secret:UdagramSecret-dev-D1lD8d
 
   # TODO: Configure this function
   GetTodos:
