@@ -56,11 +56,10 @@ function verifyToken(authHeader: string, secret: string): JwtToken {
   if (!authHeader.toLowerCase().startsWith('bearer '))
     throw new Error('Invalid authentication header')
 
-  const split = authHeader.split(' ')
-  const token = split[1]
+  const token = authHeader.split(' ')[1]
   console.log(`Token: ${token}`);
 
-  return verify(token, secret, { algorithms: ['RS256']}) as JwtToken
+  return verify(token, secret, { algorithms: ['HS256']}) as JwtToken
 }
 
 handler.use(
