@@ -3,16 +3,14 @@ import 'source-map-support/register'
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda'
 
 import { UpdateTodoRequest } from '../../requests/UpdateTodoRequest'
-import {TodoCRUD} from "../../utils/TodoCRUD";
 import { getUserIdFromEvent } from "../../auth/utils";
-
-const todoCrud = new TodoCRUD();
+import {updateTodoItem} from "../../businessLogic/todoLogic";
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const todoId = event.pathParameters.todoId;
   const userId = getUserIdFromEvent(event);
   const updatedTodo: UpdateTodoRequest = JSON.parse(event.body);
-  await todoCrud.updateTodo(todoId, userId, updatedTodo);
+  await updateTodoItem(todoId, userId, updatedTodo);
 
   return {
     statusCode: 204,

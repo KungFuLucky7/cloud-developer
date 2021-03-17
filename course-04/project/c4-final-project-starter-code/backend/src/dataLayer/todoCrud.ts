@@ -3,17 +3,14 @@ import * as AWSXRay from "aws-xray-sdk";
 
 import { DocumentClient } from 'aws-sdk/clients/dynamodb'
 import {TodoItem} from "../models/TodoItem";
-import * as uuid from 'uuid'
-import { createLogger } from './logger'
-import {CreateTodoRequest} from "../requests/CreateTodoRequest";
+import { createLogger } from '../utils/logger'
 import {UpdateTodoRequest} from "../requests/UpdateTodoRequest";
+
 const logger = createLogger('todoCrud');
-
 const bucketName = process.env.TODOITEM_S3_BUCKET_NAME;
-
 const XAWS = AWSXRay.captureAWS(AWS);
 
-export class TodoCRUD {
+export class TodoCrud {
 
     constructor(
         private readonly docClient: DocumentClient = new XAWS.DynamoDB.DocumentClient(),
@@ -22,8 +19,6 @@ export class TodoCRUD {
     }
 
     async getTodos(userId: string): Promise<TodoItem[]> {
-        logger.info("Getting TODOs:", {userId: userId})
-
         const result = await this.docClient.query({
             TableName: this.todoTable,
             IndexName: this.todoTableGsi,
@@ -32,41 +27,22 @@ export class TodoCRUD {
                 ':userId': userId
             }
         }).promise();
-        const items = result.Items
+        const items = result.Items;
 
-        logger.info("Retrieved TODOs:", {userId: userId})
-
-        return items as TodoItem[]
+        return items as TodoItem[];
     }
 
-    async createTodo(userId: string, newTodo: CreateTodoRequest): Promise<string> {
-        logger.info("Creating a new TODO:", {userId: userId})
-
-        const todoId = uuid.v4();
-        const newTodoWithAdditionalInfo = {
-            userId: userId,
-            todoId: todoId,
-            createdAt: new Date().toISOString(),
-            ...newTodo
-        }
-        if (!newTodoWithAdditionalInfo.hasOwnProperty("done")) {
-            newTodoWithAdditionalInfo["done"] = false;
-        }
+    async createTodo(newTodoWithAdditionalInfo: TodoItem): Promise<TodoItem> {
         logger.info("Creating the TODO object:", newTodoWithAdditionalInfo);
         await this.docClient.put({
             TableName: this.todoTable,
             Item: newTodoWithAdditionalInfo
         }).promise();
 
-        logger.info("Created a new TODO:", {userId: userId})
-
-        return todoId;
-
+        return newTodoWithAdditionalInfo;
     }
 
     async deleteTodo(todoId: string, userId: string) {
-        logger.info("Deleting a TODO:", {todoId: todoId});
-
         await this.docClient.delete({
             TableName: this.todoTable,
             Key: {
@@ -74,16 +50,9 @@ export class TodoCRUD {
                 "userId": userId,
             }
         }).promise();
-
-        logger.info("Deleted a TODO:", {todoId: todoId});
     }
 
-    async updateTodo(todoId: string, userId: string, updatedTodo: UpdateTodoRequest){
-        logger.info("Updating a TODO:", {
-            todoId: todoId,
-            updatedTodo: updatedTodo
-        });
-
+    async updateTodo(todoId: string, userId: string, updatedTodo: UpdateTodoRequest) {
         await this.docClient.update({
             TableName: this.todoTable,
             Key: {
@@ -99,18 +68,10 @@ export class TodoCRUD {
                 ":done": updatedTodo.done,
                 ":dueDate": updatedTodo.dueDate
             }
-        }).promise()
-
-        logger.info("Updated a TODO:", {
-            todoId: todoId,
-            updatedTodo: updatedTodo
-        });
+        }).promise();
     }
 
-    async updateTodoAttachmentUrl(todoId: string, userId: string, attachmentUrl: string){
-
-        logger.info(`Updating todoId ${todoId} with attachmentUrl ${attachmentUrl}`)
-
+    async updateTodoAttachmentUrl(todoId: string, userId: string, attachmentUrl: string) {
         await this.docClient.update({
             TableName: this.todoTable,
             Key: {

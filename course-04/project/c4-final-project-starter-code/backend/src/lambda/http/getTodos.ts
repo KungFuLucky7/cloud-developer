@@ -2,15 +2,12 @@ import 'source-map-support/register'
 
 import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
 import {getUserIdFromEvent} from "../../auth/utils";
-import {TodoCRUD} from "../../utils/TodoCRUD";
-
-const todoCrud = new TodoCRUD();
+import {getTodoItems} from "../../businessLogic/todoLogic";
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
 
     const userId = getUserIdFromEvent(event);
-
-    const todos = await todoCrud.getTodos(userId);
+    const todoItems = await getTodoItems(userId);
 
     // Send results
     return {
@@ -19,7 +16,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
             'Access-Control-Allow-Origin': '*'
         },
         body: JSON.stringify({
-            items: todos
+            items: todoItems
         })
     }
 };

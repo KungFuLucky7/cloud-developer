@@ -6,8 +6,8 @@ import * as AWS from 'aws-sdk';
 import * as AWSXRay from "aws-xray-sdk";
 
 import { createLogger } from '../../utils/logger'
-import {TodoCRUD} from "../../utils/TodoCRUD";
 import { getUserIdFromEvent } from "../../auth/utils";
+import {updateTodoItemAttachmentUrl} from "../../businessLogic/todoLogic";
 
 const logger = createLogger('generateUploadUrl')
 const XAWS = AWSXRay.captureAWS(AWS);
@@ -16,8 +16,6 @@ const urlExpiration = process.env.SIGNED_URL_EXPIRATION;
 const s3 = new XAWS.S3({
   signatureVersion: 'v4'
 });
-
-const todoCrud = new TodoCRUD();
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const todoId = event.pathParameters.todoId;
@@ -33,8 +31,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     Key: attachmentId,
     Expires: Number(urlExpiration)
   });
-
-  await todoCrud.updateTodoAttachmentUrl(todoId, userId, attachmentId);
+  await updateTodoItemAttachmentUrl(todoId, userId, uploadUrl);
 
   return {
     statusCode: 202,
