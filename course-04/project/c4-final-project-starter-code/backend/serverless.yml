@@ -20,9 +20,8 @@ provider:
   region: ${opt:region, 'us-east-1'}
 
   environment:
-    TODOITEM_TABLE: Todoitem-pec-${self:provider.stage}
-    TODOITEM_TABLE_GSI: byUserIdGsi
-    TODOITEM_S3_BUCKET_NAME: todoitem-pec-attachments-${self:provider.stage}
+    TODOITEM_TABLE: TodoItem-${self:provider.stage}
+    TODOITEM_S3_BUCKET_NAME: todoitem-attachments-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
     AUTH_0_SECRET_ID: UdagramSecret-${self:provider.stage}
     AUTH_0_SECRET_FIELD: Auth0ClientSecret
@@ -58,7 +57,7 @@ functions:
         Action:
           - dynamodb:Query
         Resource:
-          - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOITEM_TABLE}/index/${self:provider.environment.TODOITEM_TABLE_GSI}
+          - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOITEM_TABLE}
       - Effect: Allow
         Action:
           - xray:GetSamplingRules
@@ -285,23 +284,14 @@ resources:
         AttributeDefinitions:
           - AttributeName: todoId
             AttributeType: S
-          - AttributeName: name
-            AttributeType: S
           - AttributeName: userId
             AttributeType: S
         KeySchema:
           - AttributeName: todoId
             KeyType: HASH
-          - AttributeName: name
+          - AttributeName: userId
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
-        GlobalSecondaryIndexes:
-          - IndexName: ${self:provider.environment.TODOITEM_TABLE_GSI}
-            KeySchema:
-              - AttributeName: userId
-                KeyType: HASH
-            Projection:
-              ProjectionType: ALL
 
     Auth0Secret:
       Type: AWS::SecretsManager::Secret

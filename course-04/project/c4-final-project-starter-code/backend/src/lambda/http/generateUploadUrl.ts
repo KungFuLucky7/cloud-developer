@@ -7,6 +7,7 @@ import * as AWSXRay from "aws-xray-sdk";
 
 import { createLogger } from '../../utils/logger'
 import {TodoCRUD} from "../../utils/TodoCRUD";
+import { getUserIdFromEvent } from "../../auth/utils";
 
 const logger = createLogger('generateUploadUrl')
 const XAWS = AWSXRay.captureAWS(AWS);
@@ -31,8 +32,9 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     Key: attachmentId,
     Expires: urlExpiration
   });
+  const userId = getUserIdFromEvent(event);
 
-  await todoCrud.updateTodoAttachmentUrl(todoId, attachmentId);
+  await todoCrud.updateTodoAttachmentUrl(todoId, userId, attachmentId);
 
   return {
     statusCode: 202,
