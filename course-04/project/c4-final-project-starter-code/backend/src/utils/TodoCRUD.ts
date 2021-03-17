@@ -49,6 +49,9 @@ export class TodoCRUD {
             createdAt: new Date().toISOString(),
             ...newTodo
         }
+        if (!newTodoWithAdditionalInfo.hasOwnProperty("done")) {
+            newTodoWithAdditionalInfo["done"] = false;
+        }
         logger.info("Creating the TODO object:", newTodoWithAdditionalInfo);
         await this.docClient.put({
             TableName: this.todoTable,
