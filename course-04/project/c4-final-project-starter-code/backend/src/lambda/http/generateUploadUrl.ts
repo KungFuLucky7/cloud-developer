@@ -30,7 +30,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   const uploadUrl = s3.getSignedUrl('putObject', {
     Bucket: bucketName,
     Key: attachmentId,
-    Expires: urlExpiration
+    Expires: Number(urlExpiration)
   });
   const userId = getUserIdFromEvent(event);
 
