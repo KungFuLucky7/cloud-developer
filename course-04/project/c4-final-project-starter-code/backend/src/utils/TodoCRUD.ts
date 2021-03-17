@@ -17,7 +17,8 @@ export class TodoCRUD {
 
     constructor(
         private readonly docClient: DocumentClient = new XAWS.DynamoDB.DocumentClient(),
-        private readonly todoTable = process.env.TODOITEM_TABLE) {
+        private readonly todoTable = process.env.TODOITEM_TABLE,
+        private readonly todoTableLsi = process.env.TODOITEM_TABLE_LSI ) {
     }
 
     async getTodos(userId: string): Promise<TodoItem[]> {
@@ -25,6 +26,7 @@ export class TodoCRUD {
 
         const result = await this.docClient.query({
             TableName: this.todoTable,
+            IndexName: this.todoTableLsi,
             KeyConditionExpression: 'userId = :userId',
             ExpressionAttributeValues: {
                 ':userId': userId
