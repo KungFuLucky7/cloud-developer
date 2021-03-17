@@ -121,12 +121,6 @@ functions:
             schemas:
               application/json: ${file(src/models/update-todo-request.json)}
           authorizer: Auth
-          reqValidatorName: RequestBodyValidator
-          documentation:
-            summary: Update a new TODO
-            description: Update a new TODO
-            requestModels:
-              'application/json': UpdateTodoRequest
           cors: true
 
     iamRoleStatements:
