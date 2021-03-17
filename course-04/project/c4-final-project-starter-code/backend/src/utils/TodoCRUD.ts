@@ -7,13 +7,13 @@ import * as uuid from 'uuid'
 import { createLogger } from './logger'
 import {CreateTodoRequest} from "../requests/CreateTodoRequest";
 import {UpdateTodoRequest} from "../requests/UpdateTodoRequest";
-const logger = createLogger('todoAccess');
+const logger = createLogger('todoCrud');
 
 const bucketName = process.env.TODOITEM_S3_BUCKET_NAME;
 
 const XAWS = AWSXRay.captureAWS(AWS);
 
-export class TodoAccess {
+export class TodoCRUD {
 
     constructor(
         private readonly docClient: DocumentClient = new XAWS.DynamoDB.DocumentClient(),
@@ -22,7 +22,7 @@ export class TodoAccess {
     }
 
     async getTodos(userId: string): Promise<TodoItem[]> {
-        logger.info('Fetching all todos for userId', {userId: userId})
+        logger.info("Getting TODOs:", {userId: userId})
 
         const result = await this.docClient.query({
             TableName: this.todoTable,
@@ -32,53 +32,54 @@ export class TodoAccess {
                 ':userId': userId
             }
         }).promise();
-
         const items = result.Items
 
-        logger.info("Fetching complete.", items)
+        logger.info("Retrieved TODOs:", {userId: userId})
 
         return items as TodoItem[]
     }
 
     async createTodo(userId: string, newTodo: CreateTodoRequest): Promise<string> {
-        const todoId = uuid.v4();
+        logger.info("Creating a new TODO:", {userId: userId})
 
+        const todoId = uuid.v4();
         const newTodoWithAdditionalInfo = {
             userId: userId,
             todoId: todoId,
+            createdAt: new Date().toISOString(),
             ...newTodo
         }
-
-        logger.info("Creating new todo object:", newTodoWithAdditionalInfo);
-
+        logger.info("Creating the TODO object:", newTodoWithAdditionalInfo);
         await this.docClient.put({
             TableName: this.todoTable,
             Item: newTodoWithAdditionalInfo
         }).promise();
 
-        logger.info("Create complete.")
+        logger.info("Created a new TODO:", {userId: userId})
 
         return todoId;
 
     }
 
     async deleteTodo(todoId: string) {
-        logger.info("Deleting todo:", {todoId: todoId});
+        logger.info("Deleting a TODO:", {todoId: todoId});
+
         await this.docClient.delete({
             TableName: this.todoTable,
             Key: {
                 "todoId": todoId
             }
         }).promise();
-        logger.info("Delete complete.", {todoId: todoId});
+
+        logger.info("Deleted a TODO:", {todoId: todoId});
     }
 
     async updateTodo(todoId: string, updatedTodo: UpdateTodoRequest){
-
-        logger.info("Updating todo:", {
+        logger.info("Updating a TODO:", {
             todoId: todoId,
             updatedTodo: updatedTodo
         });
+
         await this.docClient.update({
             TableName: this.todoTable,
             Key: {
@@ -95,8 +96,10 @@ export class TodoAccess {
             }
         }).promise()
 
-        logger.info("Update complete.")
-
+        logger.info("Updated a TODO:", {
+            todoId: todoId,
+            updatedTodo: updatedTodo
+        });
     }
 
     async updateTodoAttachmentUrl(todoId: string, attachmentUrl: string){

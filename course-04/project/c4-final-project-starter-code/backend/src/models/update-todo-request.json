@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Create a new TODO JSON schema",
+  "description": "Create a new TODO",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of a TODO item",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "\\S+"
+    },
+    "dueDate": {
+      "type": "string",
+      "description": "Date and time by which an item should be completed",
+      "minLength": 1,
+      "maxLength": 32,
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}(T|\\s)\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,6})?(Z|(\\+|-)\\d{2}(:?\\d{2})?)?$"
+    },
+    "done": {
+      "type": "boolean",
+      "description": "True if an item was completed, false otherwise",
+      "default": false
+    },
+    "attachmentUrl": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uri",
+      "description": "A URL pointing to an image attached to a TODO item",
+      "minLength": 1,
+      "maxLength": 2048,
+      "pattern": "^(https?|http?)://"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "additionalProperties": false
+}
