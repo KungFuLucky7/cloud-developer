@@ -13,7 +13,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   await todoCrud.updateTodo(todoId, updatedTodo);
 
   return {
-    statusCode: 202,
+    statusCode: 204,
     headers: {
       'Access-Control-Allow-Origin': '*'
     },

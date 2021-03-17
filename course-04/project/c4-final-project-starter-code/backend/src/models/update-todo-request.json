@@ -22,21 +22,7 @@
       "type": "boolean",
       "description": "True if an item was completed, false otherwise",
       "default": false
-    },
-    "attachmentUrl": {
-      "type": [
-        "string",
-        "null"
-      ],
-      "format": "uri",
-      "description": "A URL pointing to an image attached to a TODO item",
-      "minLength": 1,
-      "maxLength": 2048,
-      "pattern": "^(https?|http?)://"
     }
   },
-  "required": [
-    "name"
-  ],
   "additionalProperties": false
 }

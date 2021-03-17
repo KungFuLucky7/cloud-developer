@@ -35,7 +35,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   await todoCrud.updateTodoAttachmentUrl(todoId, attachmentId);
 
   return {
-    statusCode: 200,
+    statusCode: 202,
     headers: {
       'Access-Control-Allow-Origin': '*'
     },
