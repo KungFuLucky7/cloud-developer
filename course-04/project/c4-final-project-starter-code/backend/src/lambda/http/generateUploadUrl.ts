@@ -21,6 +21,7 @@ const todoCrud = new TodoCRUD();
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const todoId = event.pathParameters.todoId;
+  const userId = getUserIdFromEvent(event);
   const attachmentId = uuid.v4();
 
   logger.info("Generating upload URL:", {
@@ -32,7 +33,6 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     Key: attachmentId,
     Expires: Number(urlExpiration)
   });
-  const userId = getUserIdFromEvent(event);
 
   await todoCrud.updateTodoAttachmentUrl(todoId, userId, attachmentId);
 
