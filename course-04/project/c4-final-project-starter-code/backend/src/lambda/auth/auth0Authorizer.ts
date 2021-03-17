@@ -58,8 +58,9 @@ function verifyToken(authHeader: string, secret: string): JwtToken {
 
   const split = authHeader.split(' ')
   const token = split[1]
+  console.log(`Token: ${token}`);
 
-  return verify(token, secret) as JwtToken
+  return verify(token, secret, { algorithms: ['RS256']}) as JwtToken
 }
 
 handler.use(
