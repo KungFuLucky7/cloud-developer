@@ -59,6 +59,7 @@ functions:
           path: todos
           authorizer: Auth
           cors: true
+
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -98,6 +99,7 @@ functions:
             requestModels:
               'application/json': CreateTodoRequest
           cors: true
+
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -138,6 +140,7 @@ functions:
             requestModels:
               'application/json': UpdateTodoRequest
           cors: true
+
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -172,6 +175,7 @@ functions:
           path: todos/{todoId}
           authorizer: Auth
           cors: true
+
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -206,6 +210,7 @@ functions:
           path: todos/{todoId}/attachment
           authorizer: Auth
           cors: true
+
     iamRoleStatements:
       - Effect: Allow
         Action:
